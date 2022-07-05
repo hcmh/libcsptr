@@ -37,7 +37,13 @@ inline void assert_valid_meta(const struct meta *m, const struct meta *m2) {
     ck_assert_msg(intact, "Expected metadata to be intact.");
 }
 
-#define lambda(RType, Body) ({ RType __fn__ Body; __fn__; })
+#if defined(__clang__)
+#define lambda(RType, Args,  Body) ({ RType (^__fn__) Args = ^Args Body; __fn__; })
+#else
+#define lambda(RType, Args, Body) ({ RType __fn__ Args Body; __fn__; })
+#define __block
+#endif //defined(__clang__)
+
 #define UNUSED __attribute__ ((unused))
 
 #endif /* !UTILS_H_ */

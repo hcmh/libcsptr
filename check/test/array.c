@@ -19,9 +19,9 @@ START_TEST (test_array) {
 } END_TEST
 
 START_TEST (test_array_dtor_run) {
-    int dtor_run = 0;
-    int *arr;
-    f_destructor dtor = lambda(void, (void *ptr, UNUSED void *meta) {
+    __block int dtor_run = 0;
+    __block int *arr = NULL;
+    f_destructor dtor = lambda(void, (void *ptr, UNUSED void *meta), {
             ck_assert(ptr == arr + dtor_run);
             dtor_run++;
         });
@@ -40,8 +40,8 @@ START_TEST (test_array_meta) {
 } END_TEST
 
 START_TEST (test_array_dtor_run_with_meta) {
-    int dtor_run = 0;
-    f_destructor dtor = lambda(void, (UNUSED void *ptr, UNUSED void *meta) { dtor_run = 1; });
+    __block int dtor_run = 0;
+    f_destructor dtor = lambda(void, (UNUSED void *ptr, UNUSED void *meta), { dtor_run = 1; });
 
     int *arr = unique_ptr(int[ARRAY_SIZE], {}, dtor, { &m, sizeof (m) });
     assert_valid_array(arr, ARRAY_SIZE, sizeof (int));

@@ -47,7 +47,11 @@ enum pointer_kind {
     ARRAY = 1 << 8
 };
 
+#if defined(__clang__)
+typedef void (^f_destructor)(void *, void *);
+#else
 typedef void (*f_destructor)(void *, void *);
+#endif //defined(__clang__)
 
 typedef struct {
     void *(*alloc)(size_t);

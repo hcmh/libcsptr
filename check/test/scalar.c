@@ -9,8 +9,8 @@ START_TEST (test_pointer_valid) {
 } END_TEST
 
 START_TEST (test_dtor_run) {
-    int dtor_run = 0;
-    f_destructor dtor = lambda(void, (UNUSED void *ptr, UNUSED void *meta) { dtor_run = 1; });
+    __block int dtor_run = 0;
+    f_destructor dtor = lambda(void, (UNUSED void *ptr, UNUSED void *meta), { dtor_run = 1; });
     int *a = unique_ptr(int, 42, dtor);
     assert_valid_ptr(a);
     ck_assert_msg(get_smart_ptr_meta(a) == NULL, "Expected pointer to have no metadata");
@@ -25,9 +25,9 @@ START_TEST (test_meta) {
 } END_TEST
 
 START_TEST (test_dtor_run_with_meta) {
-    int dtor_run = 0;
+    __block int dtor_run = 0;
 
-    f_destructor dtor = lambda(void, (UNUSED void *ptr, UNUSED void *meta) { dtor_run = 1; });
+    f_destructor dtor = lambda(void, (UNUSED void *ptr, UNUSED void *meta), { dtor_run = 1; });
     int *a = unique_ptr(int, 42, dtor, { &m, sizeof (m) });
     assert_valid_ptr(a);
     assert_valid_meta(&m, get_smart_ptr_meta(a));

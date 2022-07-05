@@ -14,7 +14,9 @@ set(TEST_SOURCES
   test/array.c
 )
 
+find_package(Threads REQUIRED)
+
 add_executable(check_unit ${TEST_SOURCES})
-target_link_libraries(check_unit ${CHECK_LIBRARIES} csptr)
+target_link_libraries(check_unit ${CHECK_LIBRARIES} csptr ${CMAKE_THREAD_LIBS_INIT})
 
 add_test(check_unit check_unit)

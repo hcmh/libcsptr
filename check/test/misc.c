@@ -8,11 +8,14 @@ START_TEST (test_zero_size) {
     ck_assert_msg(ptr == NULL, "Expected NULL pointer to be returned.");
 } END_TEST
 
+void *nop_alloc(UNUSED size_t s) { return NULL; }
+void nop_free(UNUSED void *otr) {};
+
 #ifndef SMALLOC_FIXED_ALLOCATOR
 START_TEST (test_alloc_failure) {
     smalloc_allocator = (s_allocator) {
-        lambda(void *, (UNUSED size_t s) { return NULL; }),
-        lambda(void, (UNUSED void *ptr) {})
+	    nop_alloc,
+	    nop_free
     };
     smart void *ptr = unique_ptr(int, 42);
     ck_assert_msg(ptr == NULL, "Expected NULL pointer to be returned.");
